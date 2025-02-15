@@ -1,0 +1,33 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Cosma",
+  "description": "Core Agent functionality for building LLM-powered agents with answer.ai cosette and OpenAI API. Cosma is a library for building LLM-powered agents using cosette. It provides:\n- A simple Agent class for creating tool-using LLM agents\n- Production-ready logging and metrics collection\n- Support for Anthropic\u2019s recommended workflow patterns",
+  "author": {
+    "@type": "Person",
+    "name": "Charles F. Vardeman II",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Laboratory for Assured AI Application Development (LA3D), Center for Research Computing, University of Notre Dame"
+    }
+  },
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "University of Notre Dame"
+  },
+  "programmingLanguage": "Python",
+  "license": "https://opensource.org/licenses/MIT",
+  "keywords": [
+    "LLM agents",
+    "AI",
+    "cosette",
+    "OpenAI",
+    "Anthropic",
+    "Python"
+  ],
+  "codeRepository": "https://github.com/la3d/cosma",
+  "issueTracker": "https://github.com/la3d/cosma/issues",
+  "softwareVersion": "0.1.0",
+  "dateCreated": "2025-02-15",
+  "developmentStatus": "active"
+}
