@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cosma"
+  site-url: "https://la3d.github.io//cosma"
+  description: "Agents build using cosette using the OpenAI API"
+  repo-branch: main
+  repo-url: "https://github.com/la3d/cosma"
