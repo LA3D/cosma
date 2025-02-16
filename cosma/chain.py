@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import List, Callable, Dict, Any, Optional
 from fastcore.basics import patch
 from cosette import models
+from toolslm.xml import json_to_xml, docs_xml, mk_doctype
 
 
 # %% ../02_prompt_chaining.ipynb 5
