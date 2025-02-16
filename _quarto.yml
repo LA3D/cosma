@@ -1,5 +1,8 @@
 project:
   type: website
+  output-dir: _docs
+  resources:
+    - "dialogs/*.ipynb"
 
 format:
   html:
