@@ -1,0 +1,212 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "",
+    "text": "Cosma is a library for building LLM-powered agents using Answer.AI’s cosette library for interacting with the OpenAI API. Answer.AI also built cosette’s sister claudette for Anthropic APIs. It extends the cosette core Chat and Toolloop to support building agents using the Anthropic Approach to “Building Effective Agents”. The markdown for the guide is in the repositories ctxs folder to be provided as a context for a LLM to help build agents. This library was built using dialog engineering and the SolveIt! dialogs are in the dialogs folder as ipynb files. The nbsanity service is useful for rendering the notebooks in a more readable format.\nIt provides:\n\nA simple Agent class for creating tool-using LLM agents\nProduction-ready logging and metrics collection\nSupport for Anthropic’s recommended workflow patterns\n\n\n\n\n\n\n\nNote\n\n\n\nWorking with dialog engineering in VSCode is more challenging than in the SolveIt! notebooks. This package will eventually provide “Custom instructions for GitHub Copilot in VS Code” to assist in building agents using a nbdev approach and Github Copilot Chat approach.",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "index.html#what-is-cosma",
+    "href": "index.html#what-is-cosma",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "",
+    "text": "Cosma is a library for building LLM-powered agents using Answer.AI’s cosette library for interacting with the OpenAI API. Answer.AI also built cosette’s sister claudette for Anthropic APIs. It extends the cosette core Chat and Toolloop to support building agents using the Anthropic Approach to “Building Effective Agents”. The markdown for the guide is in the repositories ctxs folder to be provided as a context for a LLM to help build agents. This library was built using dialog engineering and the SolveIt! dialogs are in the dialogs folder as ipynb files. The nbsanity service is useful for rendering the notebooks in a more readable format.\nIt provides:\n\nA simple Agent class for creating tool-using LLM agents\nProduction-ready logging and metrics collection\nSupport for Anthropic’s recommended workflow patterns\n\n\n\n\n\n\n\nNote\n\n\n\nWorking with dialog engineering in VSCode is more challenging than in the SolveIt! notebooks. This package will eventually provide “Custom instructions for GitHub Copilot in VS Code” to assist in building agents using a nbdev approach and Github Copilot Chat approach.",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "index.html#quick-start",
+    "href": "index.html#quick-start",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "Quick Start",
+    "text": "Quick Start\nfrom cosma.core import Agent\nfrom cosma.logging import AgentLogger\nimport math\n\n# Define a tool\ndef solve_math(\n    expression: str  # Mathematical expression to evaluate\n) -&gt; float:         # Numerical result\n    \"\"\"Evaluates mathematical expressions using Python's math module.\"\"\"\n    return eval(expression, {\"__builtins__\": {}}, \n               {\"sqrt\": math.sqrt, \"pi\": math.pi})\n\n# Create an agent\nagent = Agent(\n    role=\"math tutor\",\n    model=\"gpt-4o\",\n    tools=[solve_math]\n)\n\n# Use the agent\nresponse = agent.run_with_tools(\"What is sqrt(16) + 7?\")",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "index.html#core-features",
+    "href": "index.html#core-features",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "Core Features",
+    "text": "Core Features\n\nSimple Agent Creation\n\nDefine roles and tools\nAutomatic conversation management\nToken usage tracking\n\nProduction Logging\n\nStructured JSON logging\nMetrics collection\nConsole and file outputs\n\nTool Integration\n\nType-hinted tool definitions\nAutomatic tool documentation\nSafety constraints",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "index.html#motivation",
+    "href": "index.html#motivation",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "Motivation",
+    "text": "Motivation\nCosma emerged from the need to build production-ready LLM agents that combine: - Fast.ai’s exploratory programming approach - Anthropic’s agent development best practices - Production-ready logging and deployment capabilities\n\nExploratory Development in Solve It\nSolve It provides an ideal environment for agent development through: 1. Interactive REPL-driven development 2. Real-time testing of agent-tool interactions 3. Immediate feedback on prompt engineering 4. Literate programming with markdown documentation\nThis approach allows rapid iteration on: - Tool design and documentation - System prompts and role definitions - Conversation flow patterns - Error handling and edge cases\n\n\nAnthropic’s Agent Patterns\nCosma implements key insights from Anthropic’s “Building Effective Agents” guide:\n\nWorkflows vs Agents\n\nWorkflows: Predefined orchestration of LLMs and tools\nAgents: Systems where LLMs dynamically direct their process\nCosma supports both through run() and run_with_tools()\n\nCommon Patterns\n\nPrompt Chaining: Breaking tasks into sequential steps\n\n# Example: Two-step math solution\noutline = agent.run(\"Outline steps to solve: 3x + 7 = 22\")\nsolution = agent.run(f\"Now solve step by step:\\n{outline}\")\n\nRouting: Classifying and directing inputs\n\n# Example: Route to specialized agents\nagents = {\n    'math': math_agent,\n    'writing': writing_agent\n}\ntask = router_agent.run(prompt)\nresponse = agents[task].run(prompt)\n\nParallelization: Running subtasks simultaneously\n\n# Example: Multiple perspectives\nresponses = [\n    agent.run(prompt) for _ in range(3)\n]\nsynthesis = agent.run(f\"Synthesize these views:\\n{responses}\")\n\nEvaluator-Optimizer: Iterative refinement loops\n\n# Example: Iterative improvement\ndraft = agent.run(prompt)\nfeedback = evaluator.run(draft)\nfinal = agent.run(f\"Improve based on:\\n{feedback}\")\nBest Practices\n\nStart simple, add complexity only when needed\nUse clear, well-documented tools\nMaintain traceability through logging\nSet appropriate safety limits\n\n\n\n\nProduction Considerations\nCosma addresses key production needs:\n\nStructured Logging\nlogger = AgentLogger(\"math_agent\", log_dir=\"/var/log/agents\")\nlogger.log_event(\"tool_called\", \n    tool=\"solve_math\",\n    input=\"sqrt(16)\",\n    result=4.0\n)\nMetrics Collection\n\nToken usage tracking\nResponse times\nTool usage patterns\nSuccess/failure rates\n\nSafety Features\n\nMaximum steps limits\nTool sandboxing\nInput validation\nError handling\n\nDeployment Ready\n\nContainer-friendly logging\nResource monitoring\nState management\nError recovery\n\n\n\n\nWhy Cosma?\nTraditional agent frameworks often: - Hide implementation details - Force specific architectural patterns - Make debugging difficult - Limit customization\nCosma instead provides: 1. Transparent, composable building blocks 2. Full control over agent behavior 3. Clear logging and monitoring 4. Production-ready features\nThis approach enables: - Rapid prototyping in notebooks - Easy transition to production - Clear debugging and testing - Flexible architecture choices",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "Cosma: Core Agent Functionality for LLM-Powered Agents",
+    "section": "Developer Guide",
+    "text": "Developer Guide\nIf you are new to using nbdev here are some useful pointers to get you started.\n\nInstall cosma in Development mode\n# make sure {{lib_path}} package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to {{lib_path}}\n$ nbdev_prepare\n\n\nUV instructions\n# Install uv\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n\n# Create and activate a virtual environment\nuv venv\nsource .venv/bin/activate\n\n# Install the project in editable mode\nuv pip install -e \".[dev]\"\n\n# Install additional dependencies\nuv pip install nbdev jupyter\n\n\nInstallation\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/la3d/cosma.git\n\n\nDocumentation\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on and pypi respectively.",
+    "crumbs": [
+      "Cosma: Core Agent Functionality for LLM-Powered Agents"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "Cosma Core: Agent Class for Composable Agentic Workflows",
+    "section": "",
+    "text": "Note\n\n\n\nThis nbdev notebook was dialog engineered in the “Extending Cosette with more agentic functionality”. There is an example walkthrough of using the Agent class in the “Example Agent” notebook.",
+    "crumbs": [
+      "Cosma Core: Agent Class for Composable Agentic Workflows"
+    ]
+  },
+  {
+    "objectID": "core.html#basic-tools",
+    "href": "core.html#basic-tools",
+    "title": "Cosma Core: Agent Class for Composable Agentic Workflows",
+    "section": "Basic Tools",
+    "text": "Basic Tools\n\nExample tools for demonstrating agent functionality\n\nTools must be designed with clear documentation and examples for the LLM to use them effectively. Following Anthropic’s guidance: 1. Use clear, descriptive parameter names 2. Include comprehensive docstrings with examples 3. Specify input formats and constraints 4. Show example usage patterns\n\nsource\n\nsolve_math\n\n solve_math (expression:str)\n\n*Evaluates mathematical expressions using a safe subset of Python’s math operations.\nThe tool supports these operations: - Basic arithmetic: +, -, *, / - Functions: sqrt, pow, sin, cos - Constants: pi\nExamples: &gt;&gt;&gt; solve_math(“2+2”) 4.0 &gt;&gt;&gt; solve_math(“sqrt(16)”) 4.0 &gt;&gt;&gt; solve_math(“sin(pi/2)”) 1.0\nInput Format: - Use standard mathematical notation - Write functions in lowercase: sqrt(), sin(), cos() - Use parentheses for function arguments: sqrt(16)\nSafety: - Only whitelisted math operations are allowed - No arbitrary Python code execution*\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\nexpression\nstr\nMathematical expression as a string (e.g. “2+2”, “sqrt(16)”)\n\n\nReturns\nfloat\nNumerical result of the evaluation",
+    "crumbs": [
+      "Cosma Core: Agent Class for Composable Agentic Workflows"
+    ]
+  },
+  {
+    "objectID": "core.html#agent-class",
+    "href": "core.html#agent-class",
+    "title": "Cosma Core: Agent Class for Composable Agentic Workflows",
+    "section": "Agent Class",
+    "text": "Agent Class\n\nCore class for building LLM-powered agents with tools and memory\n\nThe Agent class provides a high-level interface for creating LLM agents that can: - Maintain conversation history - Use well-documented tools effectively - Follow specific roles and system prompts - Manage context window automatically\n\nsource\n\nAgent\n\n Agent (role:str, model:str, tools:List[Callable]=&lt;factory&gt;,\n        system:Optional[str]=None, memory_size:int=10)\n\n*An Agent that can perform tasks using an LLM and optional tools.\nThe Agent maintains its own conversation state and can use tools to perform actions. It follows Anthropic’s best practices for tool usage and prompting.\nArgs: role: Description of agent’s role (e.g. “math tutor”) model: LLM model to use (from cosette.models) tools: Optional list of callable tools with type hints and docstrings system: Override default system prompt memory_size: Number of conversation turns to retain\nExample: ```python # Create a math tutor agent math_agent = Agent( role=“math tutor”, model=“gpt-4o”, tools=solve_math, system=“You are a helpful math tutor. Show your work and verify with tools.” )\n# Use the agent\nresponse = math_agent.run_with_tools(\"What is sqrt(16) + 7?\")\n```*\n\nsource\n\n\nAgent.run_with_tools\n\n Agent.run_with_tools (prompt:str, max_steps:int=5, **kwargs)\n\n*Execute a conversation turn with automatic tool usage.\nUses cosette’s toolloop to allow the model to: 1. Analyze the prompt 2. Choose appropriate tools 3. Call tools with proper parameters 4. Use results to form response\nArgs: prompt: User’s input message max_steps: Maximum number of tool calls (default: 5) **kwargs: Additional arguments passed to toolloop\nReturns: The model’s final response after tool usage\nExample: python     agent = Agent(role=\"math tutor\", model=\"gpt-4o\", tools=[solve_math])     response = agent.run_with_tools(\"What is sqrt(16) + sin(pi/2)?\")*\n\nsource\n\n\nAgent.show\n\n Agent.show ()\n\n*Display agent configuration and conversation history.\nShows: - Current role and model - System prompt - Available tools - Token usage statistics - Full conversation history*",
+    "crumbs": [
+      "Cosma Core: Agent Class for Composable Agentic Workflows"
+    ]
+  },
+  {
+    "objectID": "logger.html",
+    "href": "logger.html",
+    "title": "Logging",
+    "section": "",
+    "text": "This module provides structured logging for agents running in production environments. It follows best practices for: - JSON-structured logs for easy parsing - Separate development and production handlers - Event-based logging for analysis - Token usage and performance metrics - Container-friendly file handling",
+    "crumbs": [
+      "Logging"
+    ]
+  },
+  {
+    "objectID": "logger.html#overview",
+    "href": "logger.html#overview",
+    "title": "Logging",
+    "section": "",
+    "text": "This module provides structured logging for agents running in production environments. It follows best practices for: - JSON-structured logs for easy parsing - Separate development and production handlers - Event-based logging for analysis - Token usage and performance metrics - Container-friendly file handling",
+    "crumbs": [
+      "Logging"
+    ]
+  },
+  {
+    "objectID": "logger.html#usage-example",
+    "href": "logger.html#usage-example",
+    "title": "Logging",
+    "section": "Usage Example",
+    "text": "Usage Example\n# Create an agent with production logging\nagent = Agent(\n    role=\"production_agent\",\n    model=\"gpt-4o\",\n    tools=[solve_math],\n    log_dir=\"/var/log/cosma\"  # Production log directory\n)\n\n# Logs will include structured data\nresponse = agent.run_with_tools(\"Calculate sqrt(16)\")\n# Log output example:\n# {\"timestamp\": \"2024-02-15T14:23:45\", \n#  \"event\": \"tool_call\", \n#  \"data\": {\"tool\": \"solve_math\", \"args\": {\"expression\": \"sqrt(16)\"}}}",
+    "crumbs": [
+      "Logging"
+    ]
+  },
+  {
+    "objectID": "logger.html#production-setup",
+    "href": "logger.html#production-setup",
+    "title": "Logging",
+    "section": "Production Setup",
+    "text": "Production Setup\nFor containerized environments: 1. Mount a volume for logs: /var/log/cosma 2. Set LOG_LEVEL environment variable 3. Configure log rotation (logrotate recommended)\n\nsource\n\nAgentLogger\n\n AgentLogger (name:str, level:int=20, log_dir:Optional[str]=None)\n\n*Structured logging for agent activities with console and file output.\nArgs: name: Logger name (typically agent role) level: Logging level (default: INFO) log_dir: Optional directory for log files\nExample: python     logger = AgentLogger(         name=\"math_agent\",         log_dir=\"logs\"     )     logger.log_event(\"tool_called\",          tool=\"solve_math\",         input=\"sqrt(16)\",         result=4.0     )*\n\nsource\n\n\nAgentLogger.log_event\n\n AgentLogger.log_event (event:str, **data)\n\n*Log a structured event with arbitrary data.\nArgs: event: Type of event (e.g., ‘prompt_received’, ‘tool_called’) **data: Arbitrary key-value pairs for event data\nExample: python     logger.log_event('tool_called',         tool_name='solve_math',         input='sqrt(16)',         result=4.0,         execution_time=0.05     )*\n\nsource\n\n\nAgentLogger.log_completion\n\n AgentLogger.log_completion (chat_completion, execution_time:float)\n\n*Log metrics from a chat completion response.\nArgs: chat_completion: Response from cosette Chat execution_time: Time taken for the complete interaction*\n\nsource\n\n\nAgentLogger.log_metrics\n\n AgentLogger.log_metrics (metrics:dict)\n\n*Log accumulated metrics for the agent.\nArgs: metrics: Dictionary of metric names and values*\n\nsource\n\n\nAgentMetrics\n\n AgentMetrics (total_tokens:int=0, prompt_tokens:int=0,\n               completion_tokens:int=0, tool_calls:int=0,\n               total_time:float=0.0, successful_calls:int=0,\n               failed_calls:int=0)\n\n*Collect and track agent performance metrics.\nTracks: - Token usage - Tool calls - Response times - Success/failure rates*",
+    "crumbs": [
+      "Logging"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html",
+    "href": "prompt_chaining.html",
+    "title": "Chaining",
+    "section": "",
+    "text": "From the Anthropic Effective Agents Guide  Prompt chaining decomposes a task into a sequence of steps, where each LLM call processes the output of the previous one. You can add programmatic checks (see “gate” in the diagram below) on any intermediate steps to ensure that the process is still on track.\nWhen to use this workflow:This workflow is ideal for situations where the task can be easily and cleanly decomposed into fixed subtasks. The main goal is to trade off latency for higher accuracy, by making each LLM call an easier task.\nExamples where prompt chaining is useful:\nfrom IPython.display import display, Markdown\nsource",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#basic-chain-composition",
+    "href": "prompt_chaining.html#basic-chain-composition",
+    "title": "Chaining",
+    "section": "Basic Chain Composition",
+    "text": "Basic Chain Composition\nThe Chain class allows simple composition of AI agents using Python’s pipe operator (|). This provides a clear, readable way to create processing pipelines.",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#example-product-description-translation",
+    "href": "prompt_chaining.html#example-product-description-translation",
+    "title": "Chaining",
+    "section": "Example: Product Description Translation",
+    "text": "Example: Product Description Translation\nIn this example, we create a chain that: 1. Generates a product description in English 2. Translates it to Spanish 3. Maintains formatting and style\n# Create specialized agents\nwriter = Agent(\"writer\", model, system=\"Create concise, engaging product descriptions\")\ntranslator = Agent(\"translator\", model, system=\"Translate while maintaining tone and style\")\n\n# Compose the chain\nchain = Chain(\"product_translator\")\nchain.agents = [writer, translator]\n\n# Test with a simple prompt\nprompt = \"Describe a smart coffee maker\"\nresult = chain(prompt)\nThe chain maintains a history of each step, showing inputs and outputs for debugging and analysis.\n\n# Create our test agents\nwriter = Agent(\"writer\", model, system=\"Create concise, engaging product descriptions\")\ntranslator = Agent(\"translator\", model, system=\"Translate to spanish while maintaining tone and style\")\n\n# Simple chain\nchain = Chain(\"product_translator\")\nchain.agents = [writer, translator]\n\n# Test it\nprompt = \"Describe a smart coffee maker\"\nresult = chain(prompt)\ndisplay(Markdown(chain.show()))\n\nproduct_translator\n\nStructure\n\nwriter ↓\ntranslator\n\n\n\nExecution\nStep 1: writer\nInput:\nDescribe a smart coffee maker\nOutput:\nBrew the perfect cup every time with our Smart Coffee Maker. Featuring Wi-Fi connectivity, this innovative appliance syncs seamlessly with your smartphone, allowing you to customize brews, set schedules, and receive notifications with ease. With its intuitive touchscreen, voice control compatibility, and auto-cleaning functionality, morning routines have never been more convenient. Ideal for coffee aficionados, it offers precision brewing with programmable strength and temperature settings. Enjoy café-quality coffee at home with smart technology designed to simplify your life.\n↓\nStep 2: translator\nInput:\nBrew the perfect cup every time with our Smart Coffee Maker. Featuring Wi-Fi connectivity, this innovative appliance syncs seamlessly with your smartphone, allowing you to customize brews, set schedules, and receive notifications with ease. With its intuitive touchscreen, voice control compatibility, and auto-cleaning functionality, morning routines have never been more convenient. Ideal for coffee aficionados, it offers precision brewing with programmable strength and temperature settings. Enjoy café-quality coffee at home with smart technology designed to simplify your life.\nOutput:\nPrepara la taza perfecta cada vez con nuestra Cafetera Inteligente. Con conectividad Wi-Fi, este innovador aparato se sincroniza sin problemas con tu smartphone, permitiéndote personalizar las preparaciones, establecer horarios y recibir notificaciones con facilidad. Con su pantalla táctil intuitiva, compatibilidad con control por voz y función de autolimpieza, las rutinas matutinas nunca han sido más convenientes. Ideal para los aficionados al café, ofrece una preparación precisa con ajustes programables de intensidad y temperatura. Disfruta de café de calidad de cafetería en casa con tecnología inteligente diseñada para simplificar tu vida.",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#structure",
+    "href": "prompt_chaining.html#structure",
+    "title": "Chaining",
+    "section": "Structure",
+    "text": "Structure\n\nwriter ↓\ntranslator",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#execution",
+    "href": "prompt_chaining.html#execution",
+    "title": "Chaining",
+    "section": "Execution",
+    "text": "Execution\nStep 1: writer\nInput:\nDescribe a smart coffee maker\nOutput:\nBrew the perfect cup every time with our Smart Coffee Maker. Featuring Wi-Fi connectivity, this innovative appliance syncs seamlessly with your smartphone, allowing you to customize brews, set schedules, and receive notifications with ease. With its intuitive touchscreen, voice control compatibility, and auto-cleaning functionality, morning routines have never been more convenient. Ideal for coffee aficionados, it offers precision brewing with programmable strength and temperature settings. Enjoy café-quality coffee at home with smart technology designed to simplify your life.\n↓\nStep 2: translator\nInput:\nBrew the perfect cup every time with our Smart Coffee Maker. Featuring Wi-Fi connectivity, this innovative appliance syncs seamlessly with your smartphone, allowing you to customize brews, set schedules, and receive notifications with ease. With its intuitive touchscreen, voice control compatibility, and auto-cleaning functionality, morning routines have never been more convenient. Ideal for coffee aficionados, it offers precision brewing with programmable strength and temperature settings. Enjoy café-quality coffee at home with smart technology designed to simplify your life.\nOutput:\nPrepara la taza perfecta cada vez con nuestra Cafetera Inteligente. Con conectividad Wi-Fi, este innovador aparato se sincroniza sin problemas con tu smartphone, permitiéndote personalizar las preparaciones, establecer horarios y recibir notificaciones con facilidad. Con su pantalla táctil intuitiva, compatibilidad con control por voz y función de autolimpieza, las rutinas matutinas nunca han sido más convenientes. Ideal para los aficionados al café, ofrece una preparación precisa con ajustes programables de intensidad y temperatura. Disfruta de café de calidad de cafetería en casa con tecnología inteligente diseñada para simplificar tu vida.",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#structured-data-with-chains",
+    "href": "prompt_chaining.html#structured-data-with-chains",
+    "title": "Chaining",
+    "section": "Structured Data with Chains",
+    "text": "Structured Data with Chains\nFollowing Anthropic’s best practices for handling structured data, we can create chains that process and validate XML-formatted information. This approach offers several benefits:\n\nClear Data Structure: Using XML tags provides explicit structure to agent outputs\nValidation: Easy to verify required fields and format\nConsistent Parsing: Reliable transformation between formats\n\n\nBasic Example: Product Analysis Chain\nWe’ll create a chain that: - Analyzes product descriptions - Outputs structured XML data - Validates the structure - Transforms data as needed\n\n# 1. Create the analyzer agent\nanalyzer = Agent(\"product_analyzer\", model,\n    system=\"\"\"You are a product analyzer. When analyzing products, always provide detailed, structured analysis using XML tags. Be thorough but concise.\"\"\")\n\n\n# 2. Create a function to format the prompt\ndef create_analysis_prompt(product_description: str) -&gt; str:\n    return f\"\"\"Here is the format to use for your analysis:\n\n&lt;documents&gt;\n&lt;document index=\"1\"&gt;\n&lt;source&gt;product analysis&lt;/source&gt;\n&lt;document_content&gt;\n    &lt;features&gt;List key features&lt;/features&gt;\n    &lt;pricing&gt;Price range and considerations&lt;/pricing&gt;\n    &lt;market&gt;Target market segments&lt;/market&gt;\n&lt;/document_content&gt;\n&lt;/document&gt;\n&lt;/documents&gt;\n\nAnalyze this product: {product_description}\"\"\"\n\n\n# Create chain with structured output\nanalysis_chain = Chain(\"product_analyzer\")\nanalysis_chain.agents = [analyzer]\n\n# Test with a product\ntest_prompt = \"Analyze this product: A smart home security camera with AI detection, 4K resolution, and cloud storage.\"\nresult = analysis_chain(test_prompt)\ndisplay(Markdown(analysis_chain.show()))\n\nproduct_analyzer\n\nStructure\n\nproduct_analyzer\n\n\n\nExecution\nStep 1: product_analyzer\nInput:\nAnalyze this product: A smart home security camera with AI detection, 4K resolution, and cloud storage.\nOutput:\n```xml\n&lt;ProductAnalysis&gt;\n    &lt;ProductName&gt;Smart Home Security Camera&lt;/ProductName&gt;\n    &lt;Features&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;AI Detection&lt;/Name&gt;\n            &lt;Description&gt;\n                The camera incorporates artificial intelligence to distinguish between different types of motion events.\n                This helps in reducing false alarms by only notifying the user of significant activities, such as identifying\n                human figures versus animals or passing vehicles.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;4K Resolution&lt;/Name&gt;\n            &lt;Description&gt;\n                Offers ultra-high-definition video quality, providing clear and detailed images that are essential for\n                identifying faces and other critical details, enhancing the effectiveness of security monitoring.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;Cloud Storage&lt;/Name&gt;\n            &lt;Description&gt;\n                Provides remote storage solutions where recorded footage is automatically uploaded to the cloud.\n                This feature ensures that video evidence is preserved even if the camera is damaged or stolen.\n                Various storage plans might be available, offering different capacities and retention periods.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n    &lt;/Features&gt;\n    &lt;Benefits&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Enhanced security with AI enabling smarter alert systems and decreased false positives.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Better image quality with 4K resolution ensures critical details aren't missed.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Remote access to footage from anywhere, thanks to cloud storage solutions.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n    &lt;/Benefits&gt;\n    &lt;Considerations&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;Requires a stable internet connection for effective AI processing and cloud storage management.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;May incur additional costs related to cloud storage subscriptions beyond initial purchase.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;High-resolution video files (4K) will consume more bandwidth and storage space than lower resolutions.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n    &lt;/Considerations&gt;\n&lt;/ProductAnalysis&gt;\n:::\n:::\n\n\n---\n\n[source](https://github.com/la3d/cosma/blob/main/cosma/chain.py#L82){target=\"_blank\" style=\"float:right; font-size:smaller\"}\n\n### extract_xml\n\n&gt;      extract_xml (text:str, tag:str)\n\n*Extract content from XML tags, including CDATA sections*\n\n\n::: {#cell-15 .cell}\n``` {.python .cell-code}\ndef create_analysis_prompt(product_description: str) -&gt; str:\n    return f\"\"\"Here is the format to use for your analysis:\n\n&lt;documents&gt;\n&lt;document index=\"1\"&gt;\n&lt;source&gt;product analysis&lt;/source&gt;\n&lt;document_content&gt;\n    &lt;features&gt;\n    - Key feature 1\n    - Key feature 2\n    &lt;/features&gt;\n    &lt;pricing&gt;\n    - Price range\n    - Key pricing factors\n    &lt;/pricing&gt;\n    &lt;market&gt;\n    - Target market 1\n    - Target market 2\n    &lt;/market&gt;\n&lt;/document_content&gt;\n&lt;/document&gt;\n&lt;/documents&gt;\n\nAnalyze this product: {product_description}\"\"\"\n\n\n\n# First run our analysis\ntest_product = \"A smart home security camera with AI detection, 4K resolution, and cloud storage.\"\nresult = analysis_chain(create_analysis_prompt(test_product))\n\n# Now extract from the nested structure\ndocument_content = extract_xml(result, 'document_content')\nfeatures = extract_xml(document_content, 'features')\npricing = extract_xml(document_content, 'pricing')\nmarket = extract_xml(document_content, 'market')\n\n# Show the extracted content\nprint(\"Features:\\n\", features)\nprint(\"\\nPricing:\\n\", pricing)\nprint(\"\\nMarket:\\n\", market)\n\nFeatures:\n - AI Detection for advanced motion recognition to minimize false alerts\n                - 4K Resolution providing detailed and crystal-clear video footage\n                - Cloud Storage offering secure, remote access to recorded content\n\nPricing:\n - Price range: $150 to $400\n                - Key pricing factors: Quality of AI technology, cost of cloud storage subscription, and inclusion of features such as night vision or two-way audio\n\nMarket:\n - Target market 1: Tech-savvy homeowners interested in smart security solutions\n                - Target market 2: Small businesses needing robust surveillance systems",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#structure-1",
+    "href": "prompt_chaining.html#structure-1",
+    "title": "Chaining",
+    "section": "Structure",
+    "text": "Structure\n\nproduct_analyzer",
+    "crumbs": [
+      "Chaining"
+    ]
+  },
+  {
+    "objectID": "prompt_chaining.html#execution-1",
+    "href": "prompt_chaining.html#execution-1",
+    "title": "Chaining",
+    "section": "Execution",
+    "text": "Execution\nStep 1: product_analyzer\nInput:\nAnalyze this product: A smart home security camera with AI detection, 4K resolution, and cloud storage.\nOutput:\n```xml\n&lt;ProductAnalysis&gt;\n    &lt;ProductName&gt;Smart Home Security Camera&lt;/ProductName&gt;\n    &lt;Features&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;AI Detection&lt;/Name&gt;\n            &lt;Description&gt;\n                The camera incorporates artificial intelligence to distinguish between different types of motion events.\n                This helps in reducing false alarms by only notifying the user of significant activities, such as identifying\n                human figures versus animals or passing vehicles.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;4K Resolution&lt;/Name&gt;\n            &lt;Description&gt;\n                Offers ultra-high-definition video quality, providing clear and detailed images that are essential for\n                identifying faces and other critical details, enhancing the effectiveness of security monitoring.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n        &lt;Feature&gt;\n            &lt;Name&gt;Cloud Storage&lt;/Name&gt;\n            &lt;Description&gt;\n                Provides remote storage solutions where recorded footage is automatically uploaded to the cloud.\n                This feature ensures that video evidence is preserved even if the camera is damaged or stolen.\n                Various storage plans might be available, offering different capacities and retention periods.\n            &lt;/Description&gt;\n        &lt;/Feature&gt;\n    &lt;/Features&gt;\n    &lt;Benefits&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Enhanced security with AI enabling smarter alert systems and decreased false positives.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Better image quality with 4K resolution ensures critical details aren't missed.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n        &lt;Benefit&gt;\n            &lt;Description&gt;Remote access to footage from anywhere, thanks to cloud storage solutions.&lt;/Description&gt;\n        &lt;/Benefit&gt;\n    &lt;/Benefits&gt;\n    &lt;Considerations&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;Requires a stable internet connection for effective AI processing and cloud storage management.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;May incur additional costs related to cloud storage subscriptions beyond initial purchase.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n        &lt;Consideration&gt;\n            &lt;Description&gt;High-resolution video files (4K) will consume more bandwidth and storage space than lower resolutions.&lt;/Description&gt;\n        &lt;/Consideration&gt;\n    &lt;/Considerations&gt;\n&lt;/ProductAnalysis&gt;\n:::\n:::\n\n\n---\n\n[source](https://github.com/la3d/cosma/blob/main/cosma/chain.py#L82){target=\"_blank\" style=\"float:right; font-size:smaller\"}\n\n### extract_xml\n\n&gt;      extract_xml (text:str, tag:str)\n\n*Extract content from XML tags, including CDATA sections*\n\n\n::: {#cell-15 .cell}\n``` {.python .cell-code}\ndef create_analysis_prompt(product_description: str) -&gt; str:\n    return f\"\"\"Here is the format to use for your analysis:\n\n&lt;documents&gt;\n&lt;document index=\"1\"&gt;\n&lt;source&gt;product analysis&lt;/source&gt;\n&lt;document_content&gt;\n    &lt;features&gt;\n    - Key feature 1\n    - Key feature 2\n    &lt;/features&gt;\n    &lt;pricing&gt;\n    - Price range\n    - Key pricing factors\n    &lt;/pricing&gt;\n    &lt;market&gt;\n    - Target market 1\n    - Target market 2\n    &lt;/market&gt;\n&lt;/document_content&gt;\n&lt;/document&gt;\n&lt;/documents&gt;\n\nAnalyze this product: {product_description}\"\"\"",
+    "crumbs": [
+      "Chaining"
+    ]
+  }
+]
