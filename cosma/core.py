@@ -16,6 +16,7 @@ from IPython.display import display, Markdown
 
 
 # %% ../00_core.ipynb 7
+import re, math
 import math
 
 def solve_math(
